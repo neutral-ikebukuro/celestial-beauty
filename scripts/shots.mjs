@@ -1,0 +1,41 @@
+// 画面サイズごとに主要画面を撮る: node scripts/shots.mjs <出力フォルダ> [URL]
+import { chromium } from '@playwright/test';
+import fs from 'node:fs';
+const out = process.argv[2] || 'shots';
+const url = process.argv[3] || 'http://127.0.0.1:5188/';
+fs.mkdirSync(out, { recursive: true });
+const sizes = [[375, 812, 3], [390, 844, 3], [768, 1024, 2], [1440, 900, 1]];
+const only = process.env.ONLY ? process.env.ONLY.split(',') : null;
+const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+for (const [w, h, dpr] of sizes) {
+  if (only && !only.includes(String(w))) continue;
+  const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: process.env.DPR ? Number(process.env.DPR) : Math.min(dpr, 2), hasTouch: w < 800, isMobile: w < 800 });
+  const page = await ctx.newPage();
+  const errs = [];
+  page.on('console', (m) => m.type() === 'error' && errs.push(m.text()));
+  page.on('pageerror', (e) => errs.push(String(e)));
+  await page.goto(url, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(2600);
+  await page.screenshot({ path: `${out}/${w}_1_first.png` });
+  await page.selectOption('select[aria-label="誕生月"]', '11');
+  await page.selectOption('select[aria-label="誕生日"]', '8');
+  await page.waitForTimeout(1500);
+  await page.screenshot({ path: `${out}/${w}_2_selected.png` });
+  await page.click('.cta');
+  await page.waitForTimeout(1300);
+  await page.screenshot({ path: `${out}/${w}_3_reading.png` });
+  await page.waitForTimeout(3200);
+  await page.screenshot({ path: `${out}/${w}_4_result.png` });
+  await page.screenshot({ path: `${out}/${w}_5_result_full.png`, fullPage: true });
+  await page.click('.dish__more');
+  await page.waitForTimeout(900);
+  await page.screenshot({ path: `${out}/${w}_6_detail.png` });
+  await page.click('.sheet__close');
+  await page.waitForTimeout(300);
+  await page.click('.actions .cta');
+  await page.waitForTimeout(2500);
+  await page.screenshot({ path: `${out}/${w}_7_share.png` });
+  console.log(w, 'errors:', errs.length ? errs : 'none');
+  await ctx.close();
+}
+await browser.close();
