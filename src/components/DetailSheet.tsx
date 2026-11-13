@@ -62,7 +62,7 @@ export function DetailSheet({ pick, onClose }: { pick: FoodPick; onClose: () => 
         <section className="detail__block detail__rule">
           <h3>この一皿が選ばれた理由</h3>
           <ol>{pick.reasons.map((r, i) => <li key={i}>{r}</li>)}</ol>
-          <p className="fine">料理の選び方は NEUTRAL 池袋の独自ルールです。占星術の伝統的な解釈ではありません。</p>
+          <p className="fine">料理の選び方は NEUTRALの独自ルールです。占星術の伝統的な解釈ではありません。</p>
         </section>
 
         {pick.alternatives.length > 0 && (

@@ -125,7 +125,6 @@ export function ResultScreen({ sky, reading, pick, reducedMotion, onDetail, onSh
 
       <footer className="foot">
         <span className="brand__name">NEUTRAL</span>
-        <span>池袋</span>
       </footer>
     </main>
   );

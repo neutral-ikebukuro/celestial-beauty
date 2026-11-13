@@ -35,7 +35,6 @@ export function SelectScreen({ sky, sign, onSign, onStart, fallback }: Props) {
     <main className="select">
       <header className="brand">
         <span className="brand__name">NEUTRAL</span>
-        <span className="brand__place">池袋</span>
       </header>
 
       <section className="hero">

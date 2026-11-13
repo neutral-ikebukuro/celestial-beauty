@@ -136,7 +136,7 @@ export function ShareSheet({ sky, reading, pick, snapshot, onClose }: Props) {
       ctx.fillText('NEUTRAL', 84, H - 110);
       ctx.font = '400 24px "Noto Sans JP", sans-serif';
       ctx.fillStyle = 'rgba(236,232,241,0.7)';
-      ctx.fillText('池袋 ・ 美容占星術と今日の一皿', 300, H - 110);
+      ctx.fillText('美容占星術と今日の一皿', 300, H - 110);
 
       const blob: Blob | null = await new Promise((r) => cv.toBlob(r, 'image/jpeg', 0.92));
       if (!alive || !blob) return;
